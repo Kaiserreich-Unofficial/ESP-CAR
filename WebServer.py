@@ -142,5 +142,5 @@ loop.create_task(radar())
 
 # 在事件循环中运行picoweb应用对象
 loop.run_until_complete(
-    app.run(debug=True, port=80, host=sta_if.ifconfig()[0]))
+    app.run(debug=True, port=80, host=ap_if.ifconfig()[0]))
 # app.run(debug=True, port=80, host=sta_if.ifconfig()[0])
