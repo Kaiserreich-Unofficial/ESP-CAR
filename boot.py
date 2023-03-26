@@ -4,11 +4,10 @@ import uos
 import machine
 import utime
 
-sta_if = network.WLAN(network.STA_IF)
-sta_if.active(True)
-sta_if.scan()
-sta_if.connect("tjuwlan", "")
+ap = network.WLAN(network.AP_IF)
+ap.active(True)
+ap.config(essid="ESP-CAR", password="123456")
 
 gc.collect()
 utime.sleep_ms(1000)
-print("IP Address:"+sta_if.ifconfig()[0])
+print("IP Address:"+ap.ifconfig()[0])
