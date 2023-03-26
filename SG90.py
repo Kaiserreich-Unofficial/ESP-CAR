@@ -1,6 +1,6 @@
 from machine import Pin, PWM
 # 舵机输出引脚
-SG90 = PWM(Pin(2, Pin.OUT))
+SG90 = PWM(Pin(15, Pin.OUT))
 
 # 设置pwm频率
 SG90.freq(50)
