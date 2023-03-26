@@ -4,6 +4,7 @@ import uasyncio as asyncio
 from machine import Pin
 from PyCar import PyCar
 from HCSR04 import chkdist
+from SG90 import Servo
 
 led = Pin(2)
 led = Pin(2, Pin.OUT)
@@ -114,9 +115,19 @@ async def blink():
         led.value(pin_val)
         await asyncio.sleep(1)
 
+
 async def radar():
     while True:
-        await chkdist()
+        for degree in range(180):
+            chkdist()
+            Servo(degree)
+            print(chkdist(), degree)
+            await asyncio.sleep_ms(15)
+        for degree in range(180, 0, -1):
+            chkdist()
+            Servo(degree)
+            print(chkdist(), degree)
+            await asyncio.sleep_ms(15)
 
 # 将index函数注册为协程视图函数
 app.add_url_rule("/", index, coro=True)
@@ -126,6 +137,7 @@ loop = asyncio.get_event_loop()
 
 # 在事件循环中创建一个新任务，执行blink函数
 loop.create_task(blink())
+loop.create_task(radar())
 
 # 在事件循环中运行picoweb应用对象
 loop.run_until_complete(
