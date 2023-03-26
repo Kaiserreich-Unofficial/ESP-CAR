@@ -1,7 +1,7 @@
 # 导入picoweb模块
 import picoweb
 import uasyncio as asyncio
-from machine import Pin
+from machine import Pin, WDT
 from PyCar import PyCar
 from HCSR04 import chkdist
 from SG90 import Servo
@@ -11,7 +11,7 @@ led = Pin(2, Pin.OUT)
 # 创建一个picoweb应用对象
 app = picoweb.WebApp(__name__)
 WirelessCar = PyCar()
-
+wdt = WDT()
 # 定义一个视图函数，用于处理网页请求
 
 
@@ -113,6 +113,7 @@ async def blink():
         toggle = toggle * -1
         pin_val = (toggle + 1) * 0.5
         led.value(pin_val)
+        wdt.feed()
         await asyncio.sleep(1)
 
 
