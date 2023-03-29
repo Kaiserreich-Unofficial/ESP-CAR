@@ -3,8 +3,9 @@ import picoweb
 import uasyncio as asyncio
 from machine import Pin, WDT
 from PyCar import PyCar
-from HCSR04 import chkdist
+from HCSR04 import HCSR04
 from SG90 import Servo
+import gc
 
 led = Pin(2)
 led = Pin(2, Pin.OUT)
@@ -12,6 +13,7 @@ led = Pin(2, Pin.OUT)
 app = picoweb.WebApp(__name__)
 WirelessCar = PyCar()
 wdt = WDT()
+Usonic = HCSR04(16,14)
 # 定义一个视图函数，用于处理网页请求
 
 
@@ -120,15 +122,14 @@ async def blink():
 async def radar():
     while True:
         for degree in range(180):
-            chkdist()
             Servo(degree)
-            print(chkdist(), degree)
+            print(Usonic.distance_mm(), degree)
             await asyncio.sleep_ms(15)
         for degree in range(180, 0, -1):
-            chkdist()
             Servo(degree)
-            print(chkdist(), degree)
+            print(Usonic.distance_mm(), degree)
             await asyncio.sleep_ms(15)
+        gc.collect()
 
 # 将index函数注册为协程视图函数
 app.add_url_rule("/", index, coro=True)
@@ -144,3 +145,4 @@ loop.create_task(radar())
 loop.run_until_complete(
     app.run(debug=True, port=80, host=ap_if.ifconfig()[0]))
 # app.run(debug=True, port=80, host=sta_if.ifconfig()[0])
+
